@@ -1,4 +1,16 @@
-@mixin form-control-focus() {  
+// Form control focus state
+//
+// Generate a customized focus state and for any input with the specified color,
+// which defaults to the `$input-focus-border-color` variable.
+//
+// We highly encourage you to not customize the default value, but instead use
+// this to tweak colors on an as-needed basis. This aesthetic change is based on
+// WebKit's default styles, but applicable to a wider range of browsers. Its
+// usability and accessibility should be taken into account with any change.
+//
+// Example usage: change the default blue border and shadow to white for better
+// contrast against a dark gray background.
+@mixin form-control-focus() {
   &:focus {
     color: $input-focus-color;
     background-color: $input-focus-bg;
@@ -29,13 +41,13 @@
     z-index: 5;
     display: none;
     max-width: 100%; // Contain to parent when possible
-    padding: .5rem;
+    padding: $tooltip-padding-y $tooltip-padding-x;
     margin-top: .1rem;
-    font-size: .875rem;
-    line-height: 1;
-    color: #fff;
-    background-color: rgba($color, .8);
-    border-radius: .2rem;
+    font-size: $tooltip-font-size;
+    line-height: $line-height-base;
+    color: color-yiq($color);
+    background-color: rgba($color, $tooltip-opacity);
+    @include border-radius($tooltip-border-radius);
   }
 
   .form-control,
@@ -46,9 +58,19 @@
 
       &:focus {
         border-color: $color;
-        //box-shadow: 0 1px $input-focus-width 0 rgba($color, .75);
+        box-shadow: 0 0 0 $input-focus-width rgba($color, .25);
       }
 
+      ~ .#{$state}-feedback,
+      ~ .#{$state}-tooltip {
+        display: block;
+      }
+    }
+  }
+
+  .form-control-file {
+    .was-validated &:#{$state},
+    &.is-#{$state} {
       ~ .#{$state}-feedback,
       ~ .#{$state}-tooltip {
         display: block;
@@ -78,7 +100,6 @@
 
         &::before {
           background-color: lighten($color, 25%);
-          border-color: lighten($color, 25%);
         }
       }
 
@@ -90,7 +111,6 @@
       &:checked {
         ~ .custom-control-label::before {
           @include gradient-bg(lighten($color, 10%));
-          border-color: lighten($color, 25%);
         }
       }
 
@@ -109,7 +129,7 @@
       ~ .custom-file-label {
         border-color: $color;
 
-        &::before { border-color: inherit; }
+        &::after { border-color: inherit; }
       }
 
       ~ .#{$state}-feedback,
@@ -125,4 +145,3 @@
     }
   }
 }
-
